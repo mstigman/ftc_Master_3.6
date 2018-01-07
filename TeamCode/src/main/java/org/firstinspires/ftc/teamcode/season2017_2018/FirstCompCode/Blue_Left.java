@@ -127,7 +127,7 @@ public class Blue_Left extends MechanumTestBot{
         waitForStart();
         runtime.reset();
         int vuf = vuforiaInt();
-//        moveStraightOld(.2,250,270);
+//        moveStraight(.2,250,270);
 //        if(isBlue())
 //        {
 //            turnDegrees(.2, 10);
@@ -138,7 +138,7 @@ public class Blue_Left extends MechanumTestBot{
 //            turnDegrees(.2, -10);
 //            turnDegrees(.2, 10);
 //        }
-//        moveStraightOld(.5,300,90);
+//        moveStraight(.5,300,90);
         moveStraightOld(.5,500,90);
         turnDegrees(.4,90);
         moveStraightOld(.4,300,270);

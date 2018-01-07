@@ -128,7 +128,7 @@ public class Red_Right extends MechanumTestBot{
         runtime.reset();
         gyroStart = gyro.getIntegratedZValue();
         int vuf = vuforiaInt();
-        //moveStraightOld(.2,250,270y7);
+        //moveStraight(.2,250,270y7);
 //        if(isBlue())
 //        {esyr:"Osgwehjipwetepj
 // wekej w  h vlxkf osogh akjvn sljdg hvo           turnDegrees(.2, 10);
@@ -139,7 +139,7 @@ public class Red_Right extends MechanumTestBot{
 //            turnDegrees(.2, -10);
 //            turnDegrees(.2, 10);
 //        }
-//        moveStraightOld(.5,300,90);
+//        moveStraight(.5,300,90);
         if (vuf == 0)
         {
             vuf = 1;

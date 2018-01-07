@@ -7,15 +7,9 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -25,7 +19,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.android.dx.cf.direct.ClassPathOpener;
 
 import java.util.ArrayList;
 //Below is the command to type into the terminal to log information into a csv file on the computer
@@ -107,88 +100,10 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         resetGyro();
         updateAccel();
     }
-
-    protected void moveStraight(double motorPower, int distance, double direction)
-    {
-        Acceleration accel = getAverageAccel();
-        double yComp = Math.sin(Math.toRadians(direction));
-        double xComp = Math.cos(Math.toRadians(direction));
-        leftUpMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftDownMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftUpMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDownMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        int currentGyro;
-        double change;
-        int rightUpSwitch;
-        int rightDownSwitch;
-        double upRightPower = yComp - xComp;
-        double upLeftPower = yComp + xComp;
-        double downRightPower = yComp + xComp;
-        double downLeftPower = yComp - xComp;
-        double largest = 0;
-        int goalTicks;
-        if(Math.abs(upRightPower) > largest)
-        {
-            largest = Math.abs(upRightPower);
-        }
-        if(Math.abs(upLeftPower) > largest)
-        {
-            largest = Math.abs(upLeftPower);
-        }
-        if(Math.abs(downRightPower) > largest)
-        {
-            largest = Math.abs(downRightPower);
-        }
-        if(Math.abs(downLeftPower) > largest)
-        {
-            largest = Math.abs(downLeftPower);
-        }
-        double offset = 1/largest;
-        upRightPower = upRightPower*offset*motorPower;
-        upLeftPower = upLeftPower*offset*motorPower;
-        downRightPower = downRightPower*offset*motorPower;
-        downLeftPower = downLeftPower*offset*motorPower;
-        //   https://robotics.stackexchange.com/questions/65/calculating-the-efficiency-of-mecanum-wheel
-        if(Math.abs(xComp) > Math.abs(yComp))
-        {
-            goalTicks =  Math.abs((int)(distance*Math.cos(Math.toRadians(direction))));
-            while(opModeIsActive() && Math.abs((leftUpMotor.getCurrentPosition()) - (leftDownMotor.getCurrentPosition()))/2 < goalTicks)
-            {
-                currentGyro = gyro.getIntegratedZValue();
-                change = (currentGyro - gyroStart)/gyroAdjust;
-                // change from linear equation
-                leftUpMotor.setPower(upLeftPower + change);
-                leftDownMotor.setPower(downLeftPower + change);
-                rightUpMotor.setPower(upRightPower - change);
-                rightDownMotor.setPower(downRightPower - change);
-                idle();
-            }
-        }
-        else
-        {
-            goalTicks =  Math.abs((int)(distance*Math.sin(Math.toRadians(direction))));
-            while(opModeIsActive() && Math.abs((leftUpMotor.getCurrentPosition()) + (leftDownMotor.getCurrentPosition()))/2 < goalTicks)
-            {
-                currentGyro = gyro.getIntegratedZValue();
-                //same
-                change = (currentGyro - gyroStart)/gyroAdjust;
-                leftUpMotor.setPower(upLeftPower + change);
-                leftDownMotor.setPower(downLeftPower + change);
-                rightUpMotor.setPower(upRightPower - change);
-                rightDownMotor.setPower(downRightPower - change);
-                idle();
-            }
-        }
-        leftUpMotor.setPower(0);
-        leftDownMotor.setPower(0);
-        rightUpMotor.setPower(0);
-        rightDownMotor.setPower(0);
-        align();
-    }
     //moves the robot in a specified direction at a specified power for a specified distance. uses gyro
     //dont get hung up on the distance 1000 forward may not be the same as 1000 to the right (though it should be)
     //it is constant though
-    protected void moveStraightOld(double motorPower, int distance, double direction)throws InterruptedException
+    protected void moveStraight(double motorPower, int distance, double direction)throws InterruptedException
     {
         double yComp = Math.sin(Math.toRadians(direction));
         double xComp = Math.cos(Math.toRadians(direction));
@@ -266,7 +181,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
 
     }
     //same as other but no direction, useful in loops
-    protected void moveStraightOld(double motorPower, double direction)throws InterruptedException
+    protected void moveStraight(double motorPower, double direction)throws InterruptedException
     {
         double yComp = Math.sin(Math.toRadians(direction));
         double xComp = Math.cos(Math.toRadians(direction));
@@ -617,35 +532,36 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         double startRange;
         boolean seen = false;
         int stopDistance = 30;
-        int differenceDetection = 5;
+        int differenceDetection = 3;
         while(range.getDistance(DistanceUnit.CM) > stopDistance)
         {
-            moveStraightOld(.4,270);
+            moveStraight(.2,270);
         }
         align();
+        sleep(500);
         startRange = range.getDistance(DistanceUnit.CM);
         while (opModeIsActive() && numberAt < nubmer)
         {
-            moveStraightOld(.8,-6);
+            moveStraight(.4,-1);
 
             showRange();
             telemetry.addData("seen: ", numberAt);
             telemetry.update();
-            if(range.getDistance(DistanceUnit.CM) <= startRange-differenceDetection && !seen)
+            if(range.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
             {
                 seen = true;
                 numberAt++;
             }
             else
             {
-                if(range.getDistance(DistanceUnit.CM) > startRange-differenceDetection+2)
+                if(range.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
                 {
                     seen = false;
                 }
             }
         }
         align();
-        moveStraightOld(0,0,0);
+        moveStraight(0,0,0);
     }
     protected int vuforiaInt() {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");

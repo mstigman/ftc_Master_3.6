@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -76,7 +75,7 @@ public class TestOpMode extends MechanumTestBotEnd
         {
             //showEncoders();
             showRange();
-            //showGyro();
+            showGyro();
             telemetry.addData("color blue:", color.blue());
             telemetry.update();
             idle();
@@ -98,13 +97,13 @@ public class TestOpMode extends MechanumTestBotEnd
             }
             //blue 2 wow
             else if (gamepad1.y) {
-                moveStraightOld(.6, 50, 180);
+                moveStraight(.6, 50, 180);
 
             } else if (gamepad1.right_bumper) {
-                moveStraightOld(.6, 50,270);
+                moveStraight(.6, 50,270);
 
             } else if (gamepad1.left_bumper) {
-                moveStraightOld(.6, 300, 90);
+                moveStraight(.6, 300, 90);
 
             }
         }

@@ -34,20 +34,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuMarkIdentification;
-import org.firstinspires.ftc.teamcode.Tests_For_Class.BasicBotTest;
-import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.LogDebug;
 import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.TestOpMode;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.Blue_Left;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.Blue_Right;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.ColorSensorTest;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.RangeSensorTest;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.Red_Left;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.Red_Right;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.TeleOpFirstComp;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.TestOpModeComp;
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.VuforiaRecognition;
-import org.firstinspires.ftc.teamcode.season2017_2018.PreSeasonTests.TestMechTest.MechBotTest;
 
 /**
  * This class demonstrates how to manually register opmodes.
@@ -82,16 +69,16 @@ public class OpModeReg
     // Or add your own lines to register your Team opmodes.
     //manager.register("ConceptVuMarkIdentification", ConceptVuMarkIdentification.class);
     //manager.register("test chassi", MechBotTest.class);
-    manager.register("MPS Test Op", TestOpModeComp.class);
-    manager.register("Blue Left", Blue_Left.class);
-    manager.register("Blue Right", Blue_Right.class);
-    manager.register("Red Left", Red_Left.class);
-    manager.register("Red Right", Red_Right.class);
-    manager.register("TeleOp First Comp", TeleOpFirstComp.class);
+    manager.register("MPS Test Op", TestOpMode.class);
+    //manager.register("Blue Left", Blue_Left.class);
+    //manager.register("Blue Right", Blue_Right.class);
+    //manager.register("Red Left", Red_Left.class);
+    //manager.register("Red Right", Red_Right.class);
+    //manager.register("TeleOp First Comp", TeleOpFirstComp.class);
     //manager.register("TeleOp Tester", TestOpModeComp.class);
     //manager.register("Color Sensor", ColorSensorTest.class);
-    manager.register("Sensor: MR range sensor", RangeSensorTest.class);
-      manager.register("LogDebug", LogDebug.class);
+    //manager.register("Sensor: MR range sensor", RangeSensorTest.class);
+    //manager.register("LogDebug", LogDebug.class);
     //manager.register("VuforiaRecognition", VuforiaRecognition.class);
     //manager.register("ConceptVuMarkIdentification", ConceptVuMarkIdentification.class);
     //manager.register("test bot", BasicBotTest.class);
