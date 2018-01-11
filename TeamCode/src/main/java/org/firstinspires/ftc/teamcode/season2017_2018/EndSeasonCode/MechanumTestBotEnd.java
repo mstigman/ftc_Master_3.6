@@ -9,6 +9,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -44,7 +45,10 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected ArrayList<Acceleration> accelOverTime = new ArrayList<Acceleration>();
     protected Servo rightGrab = null;
     protected Servo leftGrab = null;
+    protected Servo ballArm = null;
     protected Servo ballKnocker = null;
+    protected Servo pointerLeft = null;
+    protected Servo pointerRight = null;
     protected DcMotor leftUpMotor = null;
     protected DcMotor pickArm = null;
     protected  DcMotor dumpBucket = null;
@@ -52,10 +56,13 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected DcMotor leftDownMotor = null;
     protected  DcMotor rightDownMotor = null;
     protected int gyroposition = 0;
+    protected OpticalDistanceSensor odsLeft = null;
+    protected OpticalDistanceSensor odsRight = null;
     protected ModernRoboticsI2cGyro gyro;
     protected ModernRoboticsI2cCompassSensor acceleration = null;
     protected ColorSensor color;
-    protected ModernRoboticsI2cRangeSensor range = null;
+    protected ModernRoboticsI2cRangeSensor rangeLeft = null;
+    protected ModernRoboticsI2cRangeSensor rangeRight = null;
     protected double gyroAdjust = 40.0;
     private int alignTime = 500;
     private boolean turned = false;
@@ -76,11 +83,17 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         pickArm = hardwareMap.dcMotor.get("arm");
         rightDownMotor = hardwareMap.dcMotor.get("back right");
         rightGrab = hardwareMap.servo.get("right grab");
+        pointerLeft = hardwareMap.servo.get("left pointer");
+        pointerRight = hardwareMap.servo.get("right pointer");
         leftGrab = hardwareMap.servo.get("left grab");
+        ballArm = hardwareMap.servo.get("ball arm");
         ballKnocker = hardwareMap.servo.get("ball knocker");
+        odsLeft = hardwareMap.opticalDistanceSensor.get("ODS left");
+        odsRight = hardwareMap.opticalDistanceSensor.get("ODS right");
         gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
         color = hardwareMap.colorSensor.get("color");
-        range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range finder");
+        rangeRight = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range right");
+        rangeLeft = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range left");
         acceleration = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "acceleration");
         //color.setI2cAddress(I2cAddr.create7bit(0x3c));
         leftUpMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -516,7 +529,6 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
                 idle();
             }
         }
-        // run until the end of the match (driver presses STOP)
         rightDownMotor.setPower(0.0);
         rightUpMotor.setPower(0.0);
         leftUpMotor.setPower(0.0);
@@ -533,13 +545,13 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         boolean seen = false;
         int stopDistance = 30;
         int differenceDetection = 3;
-        while(range.getDistance(DistanceUnit.CM) > stopDistance)
+        while(rangeLeft.getDistance(DistanceUnit.CM) > stopDistance)
         {
             moveStraight(.2,270);
         }
         align();
         sleep(500);
-        startRange = range.getDistance(DistanceUnit.CM);
+        startRange = rangeLeft.getDistance(DistanceUnit.CM);
         while (opModeIsActive() && numberAt < nubmer)
         {
             moveStraight(.4,-1);
@@ -547,14 +559,14 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             showRange();
             telemetry.addData("seen: ", numberAt);
             telemetry.update();
-            if(range.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
+            if(rangeLeft.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
             {
                 seen = true;
                 numberAt++;
             }
             else
             {
-                if(range.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
+                if(rangeLeft.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
                 {
                     seen = false;
                 }
@@ -593,10 +605,6 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             }
         }
         return  0;
-    }
-    protected void blockDistance() throws InterruptedException {
-        double change = range.getDistance(DistanceUnit.CM)*.05;
-        moveStraightDrive(change,0,0);
     }
     protected Acceleration getAverageAccel()
     {
@@ -788,7 +796,8 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     }
     protected void showRange()
     {
-        telemetry.addData("distance cm: ", range.getDistance(DistanceUnit.CM));
+        telemetry.addData("Range left: ", rangeLeft.getDistance(DistanceUnit.CM));
+        telemetry.addData("Range right: ", rangeRight.getDistance(DistanceUnit.CM));
     }
 
 }

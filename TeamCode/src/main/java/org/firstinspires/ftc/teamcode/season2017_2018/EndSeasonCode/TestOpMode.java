@@ -73,7 +73,7 @@ public class TestOpMode extends MechanumTestBotEnd
         runtime.reset();
         while(!gamepad1.a && !gamepad1.b && !gamepad1.x && !gamepad1.y && !gamepad1.left_bumper && !gamepad1.right_bumper && opModeIsActive())
         {
-            //showEncoders();
+            showEncoders();
             showRange();
             showGyro();
             telemetry.addData("color blue:", color.blue());
@@ -85,25 +85,23 @@ public class TestOpMode extends MechanumTestBotEnd
             telemetry.update();
             //red1
             if (gamepad1.a) {
-                stopAtGlyph(3);
             }
             //red 2
             else if (gamepad1.b) {
-                stopAtGlyph(2);
             }
             //blue 1
             else if (gamepad1.x) {
-                stopAtGlyph(1);
             }
             //blue 2 wow
             else if (gamepad1.y) {
-                moveStraight(.6, 50, 180);
 
             } else if (gamepad1.right_bumper) {
-                moveStraight(.6, 50,270);
 
             } else if (gamepad1.left_bumper) {
-                moveStraight(.6, 300, 90);
+
+            }
+            else
+            {
 
             }
         }
