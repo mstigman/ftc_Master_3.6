@@ -9,6 +9,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,8 +29,8 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
 
     private final int accelAverageSize = 100;
     protected final int armUp = -50;
-    protected final double ballKnockUp = .3;
-    protected final double ballKnockDown = .8;
+    protected final double ballArmUp = .3;
+    protected final double ballArmDown = .8;
     protected final int armDown = 700;
     protected final int bucketDown = 50;
     protected final int bucketUp  = 600;
@@ -39,6 +40,13 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected final double leftOff = .5;
     protected final double bucketSpeed = .6;
     protected final double armSpeed = .6;
+    protected final double ballKnockerMid = .5;
+    protected final double ballKnockerLeft = 1;
+    protected final double ballKnockerRight = 0;
+    protected final double leftPointUp = 1;
+    protected final double leftPointDown = 0;
+    protected final double rightPointUp = 1;
+    protected final double rightPointDown = 0;
     protected ElapsedTime runtime = new ElapsedTime();
     protected int accelUpdateCount = 0;
     protected Acceleration offSetAccel;
@@ -95,7 +103,11 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         rangeRight = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range right");
         rangeLeft = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range left");
         acceleration = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "acceleration");
-        //color.setI2cAddress(I2cAddr.create7bit(0x3c));
+        color.setI2cAddress(I2cAddr.create7bit(0x3c));
+        rangeLeft.setI2cAddress(I2cAddr.create7bit(0x64));
+        rangeRight.setI2cAddress(I2cAddr.create7bit(0x28));
+        gyro.setI2cAddress(I2cAddr.create7bit(0x40));
+        acceleration.setI2cAddress(I2cAddr.create7bit(0x6e));
         leftUpMotor.setDirection(DcMotor.Direction.FORWARD);
         rightUpMotor.setDirection(DcMotor.Direction.REVERSE);
         leftDownMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -108,7 +120,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         color.enableLed(true);
         leftGrab.setPosition(leftOff);
         rightGrab.setPosition(rightOff);
-        ballKnocker.setPosition(ballKnockUp);
+        ballArm.setPosition(ballArmUp);
         calibrateAccel();
         resetGyro();
         updateAccel();
@@ -663,7 +675,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         }
     }
     protected boolean isBlue(){
-        ballKnocker.setPosition(ballKnockDown);
+        ballArm.setPosition(ballArmDown);
         sleep(500);
         int colorVal = color.blue();
         sleep(200);
