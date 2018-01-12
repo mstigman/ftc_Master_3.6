@@ -29,21 +29,21 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
 
     private final int accelAverageSize = 100;
     protected final int armUp = -50;
-    protected final double ballArmUp = .3;
-    protected final double ballArmDown = .8;
+    protected final double ballArmUp = .7;
+    protected final double ballArmDown = .0;
     protected final int armDown = 700;
     protected final int bucketDown = 50;
     protected final int bucketUp  = 600;
-    protected final double rightGrabbed = .75;
-    protected final double rightOff = .50;
-    protected final double leftGrabbed = .25;
-    protected final double leftOff = .5;
+    protected final double rightGrabbed = 1;
+    protected final double rightOff = .75;
+    protected final double leftGrabbed = .6;
+    protected final double leftOff = .75;
     protected final double bucketSpeed = .6;
     protected final double armSpeed = .6;
-    protected final double ballKnockerMid = .5;
+    protected final double ballKnockerMid = .465;
     protected final double ballKnockerLeft = 1;
     protected final double ballKnockerRight = 0;
-    protected final double leftPointUp = 1;
+    protected final double leftPointUp = .8;
     protected final double leftPointDown = 0;
     protected final double rightPointUp = 1;
     protected final double rightPointDown = 0;
@@ -103,11 +103,6 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         rangeRight = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range right");
         rangeLeft = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range left");
         acceleration = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "acceleration");
-        color.setI2cAddress(I2cAddr.create7bit(0x3c));
-        rangeLeft.setI2cAddress(I2cAddr.create7bit(0x64));
-        rangeRight.setI2cAddress(I2cAddr.create7bit(0x28));
-        gyro.setI2cAddress(I2cAddr.create7bit(0x40));
-        acceleration.setI2cAddress(I2cAddr.create7bit(0x6e));
         leftUpMotor.setDirection(DcMotor.Direction.FORWARD);
         rightUpMotor.setDirection(DcMotor.Direction.REVERSE);
         leftDownMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -123,6 +118,11 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         ballArm.setPosition(ballArmUp);
         calibrateAccel();
         resetGyro();
+        color.setI2cAddress(I2cAddr.create8bit(0x3c));
+        rangeLeft.setI2cAddress(I2cAddr.create8bit(0x2c));
+        rangeRight.setI2cAddress(I2cAddr.create8bit(0x28));
+        gyro.setI2cAddress(I2cAddr.create8bit(0x20));
+        acceleration.setI2cAddress(I2cAddr.create8bit(0x24));
         updateAccel();
     }
     //moves the robot in a specified direction at a specified power for a specified distance. uses gyro
@@ -779,6 +779,15 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             pickArm.setPower(-armSpeed);
         }
         pickArm.setPower(0);
+    }
+    protected void setServosNorm()
+    {
+        ballArm.setPosition(ballArmUp);
+        ballKnocker.setPosition(ballKnockerMid);
+        pointerRight.setPosition(rightPointUp);
+        pointerLeft.setPosition(leftPointUp);
+        rightGrab.setPosition(rightOff);
+        leftGrab.setPosition(leftOff);
     }
     protected void showEncoders()
     {

@@ -76,6 +76,7 @@ public class TestOpMode extends MechanumTestBotEnd
             showEncoders();
             showRange();
             showGyro();
+            showAcceleration();
             telemetry.addData("color blue:", color.blue());
             telemetry.update();
             idle();
@@ -85,6 +86,12 @@ public class TestOpMode extends MechanumTestBotEnd
             telemetry.update();
             //red1
             if (gamepad1.a) {
+                ballArm.setPosition(ballArmDown);
+                ballKnocker.setPosition(ballKnockerRight);
+                pointerRight.setPosition(rightPointDown);
+                pointerLeft.setPosition(leftPointDown);
+                rightGrab.setPosition(rightGrabbed);
+                leftGrab.setPosition(leftGrabbed);
             }
             //red 2
             else if (gamepad1.b) {
@@ -102,7 +109,7 @@ public class TestOpMode extends MechanumTestBotEnd
             }
             else
             {
-
+                setServosNorm();
             }
         }
     }
