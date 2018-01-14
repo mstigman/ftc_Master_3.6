@@ -27,79 +27,79 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode;
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+package org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -115,7 +115,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Red Left", group="Linear Opmode")
 @Disabled
-public class Red_Left extends MechanumTestBot{
+public class Red_Left extends MechanumTestBotEnd{
 
     private ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -126,26 +126,23 @@ public class Red_Left extends MechanumTestBot{
         telemetry.update();
         waitForStart();
         runtime.reset();
+        ballKnocker.setPosition(ballKnockerMid);
+        ballArm.setPosition(ballArmDown);
+        if(isBlue())
+        {
+            ballKnocker.setPosition(ballKnockerRight);
+        }
+        else
+        {
+             ballKnocker.setPosition(ballKnockerLeft);
+        }
         int vuf = vuforiaInt();
-//        moveStraight(.2,250,270);
-//        if(isBlue())
-//        {
-//            turnDegrees(.2, 10);
-//            turnDegrees(.2, -10);
-//        }
-//        else
-//        {
-//            turnDegrees(.2, -10);
-//            turnDegrees(.2, 10);
-//        }
-//        moveStraight(.5,300,90);
-        moveStraightOld(.5,500,90);
-        turnDegrees(.4,-90);
-        moveStraightOld(.4,300,270);
-        moveStraightOld(.8,3150,180);
-        stopAtGlyphRed(vuf);
+        sleep(1000);
+        ballKnocker.setPosition(ballKnockerMid);
+        moveStraight(.5,1500,90);
+        stopAtGlyph(vuf,true);
         dumpBlocks(false);
-        moveStraightOld(.25,100,90);
+        moveStraight(.25,100,90);
 
     }
 }

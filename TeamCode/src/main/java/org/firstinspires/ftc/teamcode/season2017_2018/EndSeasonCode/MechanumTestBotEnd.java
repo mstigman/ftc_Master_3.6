@@ -9,6 +9,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -21,32 +22,31 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
 import java.util.ArrayList;
 //Below is the command to type into the terminal to log information into a csv file on the computer
 //adb logcat FourthDimension:I *:s > C:\testLog.csv
 public abstract class MechanumTestBotEnd extends LinearOpMode{
 
     private final int accelAverageSize = 100;
-    protected final int armUp = -50;
-    protected final double ballArmUp = .7;
+    protected final int armUp = -450;
+    protected final double ballArmUp = .93;
     protected final double ballArmDown = .0;
-    protected final int armDown = 700;
+    protected final int armDown = 590;
     protected final int bucketDown = 50;
     protected final int bucketUp  = 600;
-    protected final double rightGrabbed = 1;
-    protected final double rightOff = .75;
-    protected final double leftGrabbed = .6;
-    protected final double leftOff = .75;
-    protected final double bucketSpeed = .6;
+    protected final double rightGrabbed = .43;
+    protected final double rightOff = .7;
+    protected final double leftGrabbed = .38;
+    protected final double leftOff = .13;
+    protected final double bucketSpeed = .4;
     protected final double armSpeed = .6;
     protected final double ballKnockerMid = .465;
     protected final double ballKnockerLeft = 1;
     protected final double ballKnockerRight = 0;
-    protected final double leftPointUp = .8;
+    protected final double leftPointUp = .5;
     protected final double leftPointDown = 0;
-    protected final double rightPointUp = 1;
-    protected final double rightPointDown = 0;
+    protected final double rightPointUp = .3;
+    protected final double rightPointDown = .8;
     protected ElapsedTime runtime = new ElapsedTime();
     protected int accelUpdateCount = 0;
     protected Acceleration offSetAccel;
@@ -111,19 +111,19 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         dumpBucket.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pickArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pickArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pickArm.setDirection(DcMotor.Direction.REVERSE);
+        pickArm.setDirection(DcMotor.Direction.FORWARD);
         color.enableLed(true);
-        leftGrab.setPosition(leftOff);
-        rightGrab.setPosition(rightOff);
-        ballArm.setPosition(ballArmUp);
         calibrateAccel();
         resetGyro();
+        pointerLeft.setPosition(0);
+        pointerRight.setPosition(1);
         color.setI2cAddress(I2cAddr.create8bit(0x3c));
         rangeLeft.setI2cAddress(I2cAddr.create8bit(0x2c));
         rangeRight.setI2cAddress(I2cAddr.create8bit(0x28));
         gyro.setI2cAddress(I2cAddr.create8bit(0x20));
         acceleration.setI2cAddress(I2cAddr.create8bit(0x24));
         updateAccel();
+        setServosNorm();
     }
     //moves the robot in a specified direction at a specified power for a specified distance. uses gyro
     //dont get hung up on the distance 1000 forward may not be the same as 1000 to the right (though it should be)
@@ -549,36 +549,52 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
 
     }
     //moves forward then to the side
-    //number is the hole it stops at
-    protected void stopAtGlyph(int nubmer) throws InterruptedException
+
+    protected void stopAtGlyph(int nubmer, boolean useLeft) throws InterruptedException
     {
         int numberAt = 0;
         double startRange;
         boolean seen = false;
         int stopDistance = 30;
         int differenceDetection = 3;
-        while(rangeLeft.getDistance(DistanceUnit.CM) > stopDistance)
+        ModernRoboticsI2cRangeSensor tempRange = null;
+        if(useLeft)
+        {
+           tempRange= rangeLeft;
+        }
+        else
+        {
+            tempRange = rangeRight;
+        }
+        //undo if need just get rid of temp and write twice
+        while(tempRange.getDistance(DistanceUnit.CM) > stopDistance)
         {
             moveStraight(.2,270);
         }
         align();
         sleep(500);
-        startRange = rangeLeft.getDistance(DistanceUnit.CM);
+        startRange = tempRange.getDistance(DistanceUnit.CM);
         while (opModeIsActive() && numberAt < nubmer)
         {
-            moveStraight(.4,-1);
-
+            if(useLeft)
+            {
+                moveStraight(.4,-1);
+            }
+            else
+            {
+                moveStraight(.4,179);
+            }
             showRange();
             telemetry.addData("seen: ", numberAt);
             telemetry.update();
-            if(rangeLeft.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
+            if(tempRange.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
             {
                 seen = true;
                 numberAt++;
             }
             else
             {
-                if(rangeLeft.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
+                if(tempRange.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
                 {
                     seen = false;
                 }
@@ -688,17 +704,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     }
     protected void pickUpBlock(boolean check_right_bumper)
     {
-        if((gamepad1.right_bumper || !check_right_bumper))
-        {
-            rightGrab.setPosition(rightOff);
-            leftGrab.setPosition(leftOff);
-        }
-        while(opModeIsActive() && (gamepad1.right_bumper || !check_right_bumper) && pickArm.getCurrentPosition() < armDown)
-        {
-            pickArm.setPower(armSpeed);
-        }
-        pickArm.setPower(0);
-        sleep(500);
+
         if((gamepad1.right_bumper || !check_right_bumper))
         {
             rightGrab.setPosition(rightGrabbed);
@@ -728,10 +734,6 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             rightGrab.setPosition(rightOff);
             leftGrab.setPosition(leftOff);
         }
-        while(opModeIsActive() && (gamepad1.left_bumper || !check_left_bumper) && pickArm.getCurrentPosition() < armDown)
-        {
-            pickArm.setPower(armSpeed);
-        }
         pickArm.setPower(0);
         while(opModeIsActive() && (gamepad1.left_bumper || !check_left_bumper)  && dumpBucket.getCurrentPosition() < bucketUp)
         {
@@ -747,11 +749,6 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             dumpBucket.setPower(-bucketSpeed);
         }
         dumpBucket.setPower(0);
-        while(opModeIsActive() && (gamepad1.left_bumper || !check_left_bumper)  && pickArm.getCurrentPosition() > armUp)
-        {
-            pickArm.setPower(-armSpeed);
-        }
-        pickArm.setPower(0);
         while(opModeIsActive() && (gamepad1.left_bumper && check_left_bumper))
         {
 
@@ -779,6 +776,23 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             pickArm.setPower(-armSpeed);
         }
         pickArm.setPower(0);
+    }
+    protected void setArmDown(boolean check_right_trigger)
+    {
+        if((gamepad1.right_trigger > .5 || !check_right_trigger))
+        {
+            rightGrab.setPosition(rightOff);
+            leftGrab.setPosition(leftOff);
+        }
+        while(opModeIsActive() && (gamepad1.right_trigger > .5 || !check_right_trigger) && pickArm.getCurrentPosition() < armDown)
+        {
+            pickArm.setPower(armSpeed);
+        }
+        pickArm.setPower(0);
+        while(opModeIsActive() && (gamepad1.right_trigger > .5 && check_right_trigger))
+        {
+
+        }
     }
     protected void setServosNorm()
     {

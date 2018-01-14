@@ -113,9 +113,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue Right", group="Linear Opmode")
+@Autonomous(name="Red Left", group="Linear Opmode")
 @Disabled
-public class Blue_Right extends MechanumTestBot{
+public class Red_Left_old extends MechanumTestBot{
 
     private ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -126,9 +126,8 @@ public class Blue_Right extends MechanumTestBot{
         telemetry.update();
         waitForStart();
         runtime.reset();
-        gyroStart = gyro.getIntegratedZValue();
         int vuf = vuforiaInt();
-//        moveStraight(.2,250,90);
+//        moveStraight(.2,250,270);
 //        if(isBlue())
 //        {
 //            turnDegrees(.2, 10);
@@ -139,23 +138,14 @@ public class Blue_Right extends MechanumTestBot{
 //            turnDegrees(.2, -10);
 //            turnDegrees(.2, 10);
 //        }
-//        moveStraight(.5,300,270);
-        if (vuf == 0)
-        {
-            vuf = 1;
-        }
-        else if(vuf == 3)
-        {
-            vuf = 1;
-        }
-        else if(vuf == 1)
-        {
-            vuf = 3;
-        }
-        moveStraightOld(.6,2500,180);
-        moveStraightOld(.4,200,90);
+//        moveStraight(.5,300,90);
+        moveStraightOld(.5,500,90);
+        turnDegrees(.4,-90);
+        moveStraightOld(.4,300,270);
+        moveStraightOld(.8,3150,180);
         stopAtGlyphRed(vuf);
         dumpBlocks(false);
+        moveStraightOld(.25,100,90);
 
     }
 }

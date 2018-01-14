@@ -93,7 +93,7 @@
 //Dont USE!!
 //Dont USE!!
 //Dont USE!!
-package org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode;
+package org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -113,9 +113,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue Left", group="Linear Opmode")
+@Autonomous(name="Blue Right", group="Linear Opmode")
 @Disabled
-public class Blue_Left extends MechanumTestBot{
+public class Blue_Right extends MechanumTestBotEnd{
 
     private ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -126,24 +126,24 @@ public class Blue_Left extends MechanumTestBot{
         telemetry.update();
         waitForStart();
         runtime.reset();
+        ballKnocker.setPosition(ballKnockerMid);
+        ballArm.setPosition(ballArmDown);
+        if(isBlue())
+        {
+            ballKnocker.setPosition(ballKnockerRight);
+        }
+        else
+        {
+             ballKnocker.setPosition(ballKnockerLeft);
+        }
         int vuf = vuforiaInt();
-//        moveStraight(.2,250,270);
-//        if(isBlue())
-//        {
-//            turnDegrees(.2, 10);
-//            turnDegrees(.2, -10);
-//        }
-//        else
-//        {
-//            turnDegrees(.2, -10);
-//            turnDegrees(.2, 10);
-//        }
-//        moveStraight(.5,300,90);
-        moveStraightOld(.5,500,90);
-        turnDegrees(.4,90);
-        moveStraightOld(.4,300,270);
-        stopAtGlyphRed(vuf);
+        sleep(1000);
+        ballKnocker.setPosition(ballKnockerMid);
+        moveStraight(.5,1500,90);
+        stopAtGlyph(vuf,false);
         dumpBlocks(false);
-        moveStraightOld(.25,100,90);
+        moveStraight(.25,100,90);
+
+
     }
 }

@@ -99,13 +99,14 @@ public class TestOpMode extends MechanumTestBotEnd
             //blue 1
             else if (gamepad1.x) {
             }
-            //blue 2 wow
             else if (gamepad1.y) {
 
             } else if (gamepad1.right_bumper) {
+                pickUpBlock(true);
+
 
             } else if (gamepad1.left_bumper) {
-
+                dumpBlocks(true);
             }
             else
             {

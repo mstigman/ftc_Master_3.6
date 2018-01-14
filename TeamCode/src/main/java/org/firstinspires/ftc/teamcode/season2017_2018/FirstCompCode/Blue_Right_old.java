@@ -33,73 +33,73 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
 
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
+//Dont USE!!
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -113,9 +113,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Red Right", group="Linear Opmode")
+@Autonomous(name="Blue Right", group="Linear Opmode")
 @Disabled
-public class Red_Right extends MechanumTestBot{
+public class Blue_Right_old extends MechanumTestBot{
 
     private ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -128,10 +128,10 @@ public class Red_Right extends MechanumTestBot{
         runtime.reset();
         gyroStart = gyro.getIntegratedZValue();
         int vuf = vuforiaInt();
-        //moveStraight(.2,250,270y7);
+//        moveStraight(.2,250,90);
 //        if(isBlue())
-//        {esyr:"Osgwehjipwetepj
-// wekej w  h vlxkf osogh akjvn sljdg hvo           turnDegrees(.2, 10);
+//        {
+//            turnDegrees(.2, 10);
 //            turnDegrees(.2, -10);
 //        }
 //        else
@@ -139,12 +139,20 @@ public class Red_Right extends MechanumTestBot{
 //            turnDegrees(.2, -10);
 //            turnDegrees(.2, 10);
 //        }
-//        moveStraight(.5,300,90);
+//        moveStraight(.5,300,270);
         if (vuf == 0)
         {
             vuf = 1;
         }
-        moveStraightOld(.6,1100,0);
+        else if(vuf == 3)
+        {
+            vuf = 1;
+        }
+        else if(vuf == 1)
+        {
+            vuf = 3;
+        }
+        moveStraightOld(.6,2500,180);
         moveStraightOld(.4,200,90);
         stopAtGlyphRed(vuf);
         dumpBlocks(false);
