@@ -126,8 +126,10 @@ public class Blue_Right extends MechanumTestBotEnd{
         telemetry.update();
         waitForStart();
         runtime.reset();
+        setArmUp();
         ballKnocker.setPosition(ballKnockerMid);
         ballArm.setPosition(ballArmDown);
+        sleep(200);
         if(isBlue())
         {
             ballKnocker.setPosition(ballKnockerRight);
@@ -136,10 +138,9 @@ public class Blue_Right extends MechanumTestBotEnd{
         {
              ballKnocker.setPosition(ballKnockerLeft);
         }
+        ballArm.setPosition(ballArmUp);
         int vuf = vuforiaInt();
-        sleep(1000);
-        ballKnocker.setPosition(ballKnockerMid);
-        moveStraight(.5,1500,90);
+        moveStraight(.5,2000,270);
         stopAtGlyph(vuf,false);
         dumpBlocks(false);
         moveStraight(.25,100,90);

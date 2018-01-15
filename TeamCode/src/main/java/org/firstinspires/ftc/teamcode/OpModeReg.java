@@ -34,6 +34,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
+import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.Blue_Left;
+import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.Blue_Right;
+import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.Red_Left;
+import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.Red_Right;
 import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.TeleOpEndComp;
 import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.TestOpMode;
 
@@ -72,10 +76,10 @@ public class OpModeReg
     //manager.register("test chassi", MechBotTest.class);
     manager.register("MPS Test Op", TestOpMode.class);
     manager.register("TeleOp End Comp", TeleOpEndComp.class);
-    //manager.register("Blue Left", Blue_Left_old.class);
-    //manager.register("Blue Right", Blue_Right_old.class);
-    //manager.register("Red Left", Red_Left_old.class);
-    //manager.register("Red Right", Red_Right_old.class);
+    manager.register("Blue Left", Blue_Left.class);
+    manager.register("Blue Right", Blue_Right.class);
+    manager.register("Red Left", Red_Left.class);
+    manager.register("Red Right", Red_Right.class);
     //manager.register("TeleOp First Comp", TeleOpFirstComp.class);
     //manager.register("TeleOp Tester", TestOpModeComp.class);
     //manager.register("Color Sensor", ColorSensorTest.class);

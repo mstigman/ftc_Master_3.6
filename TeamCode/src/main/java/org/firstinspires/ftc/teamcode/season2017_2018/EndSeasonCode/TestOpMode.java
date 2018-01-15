@@ -71,46 +71,43 @@ public class TestOpMode extends MechanumTestBotEnd
 
         waitForStart();
         runtime.reset();
+        int currentGyro;
+        double changeGyro;
         while(!gamepad1.a && !gamepad1.b && !gamepad1.x && !gamepad1.y && !gamepad1.left_bumper && !gamepad1.right_bumper && opModeIsActive())
         {
+
             showEncoders();
             showRange();
             showGyro();
-            showAcceleration();
             telemetry.addData("color blue:", color.blue());
             telemetry.update();
             idle();
         }
         while(opModeIsActive()) {
-            showEncoders();
+            showGyro();
             telemetry.update();
             //red1
             if (gamepad1.a) {
-                ballArm.setPosition(ballArmDown);
-                ballKnocker.setPosition(ballKnockerRight);
-                pointerRight.setPosition(rightPointDown);
-                pointerLeft.setPosition(leftPointDown);
-                rightGrab.setPosition(rightGrabbed);
-                leftGrab.setPosition(leftGrabbed);
+                moveStraight(.5,1000,90);
             }
             //red 2
             else if (gamepad1.b) {
+                moveStraight(.5,1000,0);
             }
             //blue 1
             else if (gamepad1.x) {
+                moveStraight(.5,1000,180);
             }
             else if (gamepad1.y) {
-
+                moveStraight(.5,1000,270);
             } else if (gamepad1.right_bumper) {
-                pickUpBlock(true);
-
-
+                turnDegrees(.4,-90);
             } else if (gamepad1.left_bumper) {
-                dumpBlocks(true);
+                turnDegrees(.4,180);
             }
             else
             {
-                setServosNorm();
+
             }
         }
     }

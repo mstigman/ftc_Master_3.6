@@ -71,11 +71,10 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected ColorSensor color;
     protected ModernRoboticsI2cRangeSensor rangeLeft = null;
     protected ModernRoboticsI2cRangeSensor rangeRight = null;
-    protected double gyroAdjust = 40.0;
+    protected double gyroAdjust = 90.0;
     private int alignTime = 500;
     private boolean turned = false;
     private boolean turning = false;
-    protected double gyroStart;
     protected VuforiaLocalizer vuforia;
     //call before tou do anything, sets up robot
     protected void initializeRobot() {
@@ -174,7 +173,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             while(opModeIsActive() && Math.abs((leftUpMotor.getCurrentPosition()) - (leftDownMotor.getCurrentPosition()))/2 < goalTicks)
             {
                 currentGyro = gyro.getIntegratedZValue();
-                change = (currentGyro - gyroStart)/gyroAdjust;
+                change = (currentGyro - gyroposition)/gyroAdjust;
                 // change from linear equation
                 leftUpMotor.setPower(upLeftPower + change);
                 leftDownMotor.setPower(downLeftPower + change);
@@ -190,7 +189,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             {
                 currentGyro = gyro.getIntegratedZValue();
                 //same
-                change = (currentGyro - gyroStart)/gyroAdjust;
+                change = (currentGyro - gyroposition)/gyroAdjust;
                 leftUpMotor.setPower(upLeftPower + change);
                 leftDownMotor.setPower(downLeftPower + change);
                 rightUpMotor.setPower(upRightPower - change);
@@ -244,7 +243,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         {
 
                 currentGyro = gyro.getIntegratedZValue();
-                change = (currentGyro - gyroStart)/gyroAdjust;
+                change = (currentGyro - gyroposition)/gyroAdjust;
                 leftUpMotor.setPower(upLeftPower + change);
                 leftDownMotor.setPower(downLeftPower + change);
                 rightUpMotor.setPower(upRightPower - change);
@@ -256,7 +255,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         {
 
                 currentGyro = gyro.getIntegratedZValue();
-                change = (currentGyro - gyroStart)/gyroAdjust;
+                change = (currentGyro - gyroposition)/gyroAdjust;
                 leftUpMotor.setPower(upLeftPower + change);
                 leftDownMotor.setPower(downLeftPower + change);
                 rightUpMotor.setPower(upRightPower - change);
@@ -429,14 +428,14 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         double turnTime = 0;
         if(turn > .25 || turn < -.25)
         {
-            gyroStart = gyro.getIntegratedZValue() - Math.min((turn*150),150);
+            gyroposition = (int)(gyro.getIntegratedZValue() - Math.min((turn*150),150));
             turning = true;
         }
         else
         {
-            if(Math.abs(gyroStart - gyro.getIntegratedZValue()) > 20)
+            if(Math.abs(gyroposition - gyro.getIntegratedZValue()) > 20)
             {
-                gyroStart = gyro.getIntegratedZValue();
+                gyroposition = gyro.getIntegratedZValue();
             }
 
         }
@@ -474,7 +473,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             downLeftPower = 0;
         }
         currentGyro = gyro.getIntegratedZValue();
-        change = (currentGyro - gyroStart)/100.0;
+        change = (currentGyro - gyroposition)/100.0;
         if(change < .1 && change > -.1)
         {
             change = 0;
@@ -506,25 +505,26 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         while(opModeIsActive() && runtime.milliseconds() - startTime < alignTime)
         {
             currentGyro = gyro.getIntegratedZValue();
-            changeGyro = (currentGyro - gyroStart)/gyroAdjust;
+            changeGyro = (currentGyro - gyroposition)/gyroAdjust;
             leftUpMotor.setPower(+changeGyro);
             leftDownMotor.setPower(+changeGyro);
             rightUpMotor.setPower(-changeGyro);
             rightDownMotor.setPower(-changeGyro);
             idle();
         }
+        stopMotors();
     }
     //  Turns the robot the given amount of degrees at the given speed.
     protected void turnDegrees (double motorPower, int gyroDegrees)throws InterruptedException
     {
-        gyroStart += gyroDegrees;
-        gyroposition = gyro.getIntegratedZValue();
+        gyroposition += gyroDegrees;
+        int gyroStart = gyro.getIntegratedZValue();
         if (gyroDegrees > 0) {
             leftUpMotor.setPower(-motorPower);
             leftDownMotor.setPower(-motorPower);
             rightDownMotor.setPower(motorPower);
             rightUpMotor.setPower(motorPower);
-            while (opModeIsActive() && (gyro.getIntegratedZValue() < (gyroposition+gyroDegrees-(gyroDegrees*.1)))) {
+            while (opModeIsActive() && (gyro.getIntegratedZValue() < (gyroStart+gyroDegrees-(gyroDegrees*.1)))) {
 
 
                 idle();
@@ -535,7 +535,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             leftDownMotor.setPower(motorPower);
             rightDownMotor.setPower(-motorPower);
             rightUpMotor.setPower(-motorPower);
-            while (opModeIsActive() && (gyro.getIntegratedZValue() > (gyroposition+gyroDegrees-(gyroDegrees*.1)))) {
+            while (opModeIsActive() && (gyro.getIntegratedZValue() > (gyroStart+gyroDegrees-(gyroDegrees*.1)))) {
 
 
                 idle();
@@ -555,7 +555,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         int numberAt = 0;
         double startRange;
         boolean seen = false;
-        int stopDistance = 30;
+        int stopDistance = 31;
         int differenceDetection = 3;
         ModernRoboticsI2cRangeSensor tempRange = null;
         if(useLeft)
@@ -684,7 +684,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     {
         double time = runtime.milliseconds();
         gyro.calibrate();
-        gyroStart = 0;
+        gyroposition = 0;
         while(runtime.milliseconds()-time < 3000)
         {
             idle();
@@ -737,7 +737,13 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         pickArm.setPower(0);
         while(opModeIsActive() && (gamepad1.left_bumper || !check_left_bumper)  && dumpBucket.getCurrentPosition() < bucketUp)
         {
-            dumpBucket.setPower(bucketSpeed);
+            if(check_left_bumper)
+            {
+                dumpBucket.setPower(.3);
+            }
+            else {
+                dumpBucket.setPower(bucketSpeed);
+            }
         }
         dumpBucket.setPower(0);
         if(gamepad1.left_bumper)
@@ -797,7 +803,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected void setServosNorm()
     {
         ballArm.setPosition(ballArmUp);
-        ballKnocker.setPosition(ballKnockerMid);
+        ballKnocker.setPosition(ballKnockerRight);
         pointerRight.setPosition(rightPointUp);
         pointerLeft.setPosition(leftPointUp);
         rightGrab.setPosition(rightOff);
@@ -836,3 +842,9 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     }
 
 }
+
+// notes of things to improve (for if you move on)
+//add accereration to move methods steady (may not be worth it)
+//make it so that the arm and bucket methods dont intrude on other inputs during the TELEop
+//
+
