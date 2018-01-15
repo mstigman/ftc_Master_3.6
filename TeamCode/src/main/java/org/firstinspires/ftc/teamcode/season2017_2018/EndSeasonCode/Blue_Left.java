@@ -144,6 +144,7 @@ public class Blue_Left extends MechanumTestBotEnd{
         int vuf = vuforiaInt();
         moveStraight(.4,450,270);
         turnDegrees(.3,90);
+        moveStraight(.2,50,0);
         stopAtGlyph(vuf,false);
         dumpBlocks(false);
         moveStraight(.25,100,90);

@@ -34,7 +34,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected final int armDown = 590;
     protected final int bucketDown = 50;
     protected final int bucketUp  = 600;
-    protected final double rightGrabbed = .43;
+    protected final double rightGrabbed = .4;
     protected final double rightOff = .7;
     protected final double leftGrabbed = .38;
     protected final double leftOff = .13;
@@ -116,7 +116,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         resetGyro();
         pointerLeft.setPosition(0);
         pointerRight.setPosition(1);
-        color.setI2cAddress(I2cAddr.create8bit(0x3c));
+        //color.setI2cAddress(I2cAddr.create8bit(0x3c));
         rangeLeft.setI2cAddress(I2cAddr.create8bit(0x2c));
         rangeRight.setI2cAddress(I2cAddr.create8bit(0x28));
         gyro.setI2cAddress(I2cAddr.create8bit(0x20));
@@ -555,7 +555,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         int numberAt = 0;
         double startRange;
         boolean seen = false;
-        int stopDistance = 31;
+        int stopDistance = 30;
         int differenceDetection = 3;
         ModernRoboticsI2cRangeSensor tempRange = null;
         if(useLeft)

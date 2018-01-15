@@ -142,6 +142,7 @@ public class Red_Right extends MechanumTestBotEnd{
         int vuf = vuforiaInt();
         moveStraight(.5,450,270);
         turnDegrees(.3,-90);
+        moveStraight(.2 ,50,180);
         stopAtGlyph(vuf,true);
         dumpBlocks(false);
         moveStraight(.25,100,90);
