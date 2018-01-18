@@ -80,6 +80,7 @@ public class TestOpMode extends MechanumTestBotEnd
             showRange();
             showGyro();
             telemetry.addData("color blue:", color.blue());
+            telemetry.addData("color blue:", color.red());
             telemetry.update();
             idle();
         }

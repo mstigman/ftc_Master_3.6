@@ -129,18 +129,19 @@ public class Red_Left extends MechanumTestBotEnd{
         setArmUp();
         ballKnocker.setPosition(ballKnockerMid);
         ballArm.setPosition(ballArmDown);
-        sleep(200);
+        sleep(500);
         if(isBlue())
         {
-            ballKnocker.setPosition(ballKnockerRight);
+            ballKnocker.setPosition(ballKnockerLeft);
         }
         else
         {
-             ballKnocker.setPosition(ballKnockerLeft);
+             ballKnocker.setPosition(ballKnockerRight);
         }
         ballArm.setPosition(ballArmUp);
         int vuf = vuforiaInt();
         moveStraight(.4,2000,270);
+        moveStraight(.3,100,90);
         stopAtGlyph(vuf,true);
         dumpBlocks(false);
         moveStraight(.25,100,90);

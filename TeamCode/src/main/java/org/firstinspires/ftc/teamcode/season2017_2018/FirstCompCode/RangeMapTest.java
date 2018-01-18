@@ -36,75 +36,13 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.MechanumTestBotEnd;
 
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
-//Dont USE!!
 /**
  * {@link RangeMapTest} illustrates how to use the Modern Robotics
  * Range Sensor.
@@ -118,22 +56,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 @Autonomous(name = "Sensor: MR range sensor", group = "Sensor")
 @Disabled
-public class RangeMapTest extends MechanumTestBot {
+public class RangeMapTest extends LinearOpMode {
 
 
 
     @Override public void runOpMode() throws InterruptedException {
 
+        ElapsedTime runtime = new ElapsedTime();
+        ModernRoboticsI2cColorSensor color = null;
+        color = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "color");
 
-        initializeRobot();
+
 
         // wait for the start button to be pressed
         waitForStart();
 
-        while(opModeIsActive() && runtime.seconds() < 3.0 ){
-            Log.i("RangeMapTest", " , " + range.getDistance(DistanceUnit.CM));
+        runtime.reset();
+
+        while(opModeIsActive() && runtime.seconds() < 10.0 ){
+            telemetry.addData("Value", color.alpha());
+            telemetry.update();
         }
-
-
     }
 }

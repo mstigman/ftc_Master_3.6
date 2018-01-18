@@ -40,6 +40,7 @@ import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.Red_Left;
 import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.Red_Right;
 import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.TeleOpEndComp;
 import org.firstinspires.ftc.teamcode.season2017_2018.EndSeasonCode.TestOpMode;
+import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.RangeMapTest;
 
 /**
  * This class demonstrates how to manually register opmodes.
@@ -80,6 +81,7 @@ public class OpModeReg
     manager.register("Blue Right", Blue_Right.class);
     manager.register("Red Left", Red_Left.class);
     manager.register("Red Right", Red_Right.class);
+    manager.register("Color Sensor Test", RangeMapTest.class );
     //manager.register("TeleOp First Comp", TeleOpFirstComp.class);
     //manager.register("TeleOp Tester", TestOpModeComp.class);
     //manager.register("Color Sensor", ColorSensorTest.class);

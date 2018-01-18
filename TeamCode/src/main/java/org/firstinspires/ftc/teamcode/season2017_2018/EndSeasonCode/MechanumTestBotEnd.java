@@ -8,6 +8,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
@@ -29,13 +30,13 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
 
     private final int accelAverageSize = 100;
     protected final int armUp = -450;
-    protected final double ballArmUp = .93;
+    protected final double ballArmUp = 1.0;
     protected final double ballArmDown = .0;
     protected final int armDown = 590;
     protected final int bucketDown = 50;
     protected final int bucketUp  = 600;
-    protected final double rightGrabbed = .4;
-    protected final double rightOff = .7;
+    protected final double rightGrabbed = .63;
+    protected final double rightOff = .93;
     protected final double leftGrabbed = .38;
     protected final double leftOff = .13;
     protected final double bucketSpeed = .4;
@@ -68,7 +69,8 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected OpticalDistanceSensor odsRight = null;
     protected ModernRoboticsI2cGyro gyro;
     protected ModernRoboticsI2cCompassSensor acceleration = null;
-    protected ColorSensor color;
+    protected ModernRoboticsI2cColorSensor color = null;
+    //protected ColorSensor color;
     protected ModernRoboticsI2cRangeSensor rangeLeft = null;
     protected ModernRoboticsI2cRangeSensor rangeRight = null;
     protected double gyroAdjust = 90.0;
@@ -98,7 +100,8 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         odsLeft = hardwareMap.opticalDistanceSensor.get("ODS left");
         odsRight = hardwareMap.opticalDistanceSensor.get("ODS right");
         gyro = (ModernRoboticsI2cGyro) hardwareMap.gyroSensor.get("gyro");
-        color = hardwareMap.colorSensor.get("color");
+        //color = hardwareMap.colorSensor.get("color");
+        color = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "color");
         rangeRight = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range right");
         rangeLeft = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range left");
         acceleration = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "acceleration");
@@ -116,7 +119,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         resetGyro();
         pointerLeft.setPosition(0);
         pointerRight.setPosition(1);
-        //color.setI2cAddress(I2cAddr.create8bit(0x3c));
+        color.setI2cAddress(I2cAddr.create8bit(0x3c));
         rangeLeft.setI2cAddress(I2cAddr.create8bit(0x2c));
         rangeRight.setI2cAddress(I2cAddr.create8bit(0x28));
         gyro.setI2cAddress(I2cAddr.create8bit(0x20));
@@ -691,11 +694,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         }
     }
     protected boolean isBlue(){
-        ballArm.setPosition(ballArmDown);
-        sleep(500);
-        int colorVal = color.blue();
-        sleep(200);
-        if(color.blue() > 71){
+        if(color.blue() > color.red()){
             return true;
         }
         else{
@@ -709,14 +708,14 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         {
             rightGrab.setPosition(rightGrabbed);
             leftGrab.setPosition(leftGrabbed);
-            sleep(500);
+            sleep(200);
         }
         while(opModeIsActive() && (gamepad1.right_bumper || !check_right_bumper) && pickArm.getCurrentPosition() > armUp)
         {
             pickArm.setPower(-armSpeed);
         }
         pickArm.setPower(0);
-        sleep(500);
+        sleep(250);
         if((gamepad1.right_bumper || !check_right_bumper))
         {
             rightGrab.setPosition(rightOff);
@@ -728,8 +727,38 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         }
 
     }
+    protected void pickUpBlockWithBucket(boolean check_right_bumper)
+    {
+        if((gamepad1.right_bumper || !check_right_bumper))
+        {
+            rightGrab.setPosition(rightGrabbed);
+            leftGrab.setPosition(leftGrabbed);
+            sleep(200);
+        }
+        while(opModeIsActive() && (gamepad1.right_bumper || !check_right_bumper) && pickArm.getCurrentPosition() > armUp)
+        {
+            pickArm.setPower(-armSpeed);
+        }
+        pickArm.setPower(0);
+        while(opModeIsActive() && (gamepad1.left_bumper || !check_right_bumper)  && dumpBucket.getCurrentPosition() < 100)
+        {
+                dumpBucket.setPower(.2);
+        }
+        dumpBucket.setPower(0);
+        sleep(250);
+        if((gamepad1.right_bumper || !check_right_bumper))
+        {
+            rightGrab.setPosition(rightOff);
+            leftGrab.setPosition(leftOff);
+        }
+        while(opModeIsActive() && (gamepad1.right_bumper && check_right_bumper))
+        {
+
+        }
+    }
     protected void dumpBlocks(boolean check_left_bumper)
     {
+        setBucketDown();
         if(gamepad1.right_bumper) {
             rightGrab.setPosition(rightOff);
             leftGrab.setPosition(leftOff);
@@ -785,6 +814,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     }
     protected void setArmDown(boolean check_right_trigger)
     {
+        setBucketDown();
         if((gamepad1.right_trigger > .5 || !check_right_trigger))
         {
             rightGrab.setPosition(rightOff);
