@@ -7,6 +7,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,7 +40,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     protected final double rightOff = .93;
     protected final double leftGrabbed = .38;
     protected final double leftOff = .13;
-    protected final double bucketSpeed = .4;
+    protected final double bucketSpeed = .45;
     protected final double armSpeed = .6;
     protected final double ballKnockerMid = .465;
     protected final double ballKnockerLeft = 1;
@@ -79,7 +80,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     private boolean turning = false;
     protected VuforiaLocalizer vuforia;
     //call before tou do anything, sets up robot
-    protected void initializeRobot() {
+    protected void initializeRobot(boolean resetArm) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AfWRMZn/////AAAAGeL3ADUJQUPGhNAhNQUth5aLwwOlSO08asw1uqJQF1ndzliHZxf3aUyFBY7KSvgH1zxdJlE+WRbhM/HwOddafzk+SEMQjJ+u6udl9ooyIAHjK6Vh3GBu5aYDYUoe2gM0/7mMvEy+4OAGlhvQ6ZYdRlBVc2FeK1jJsW9eeELZC/i5fhoSnQtWKBiD8YDQngbRTz8SHJGfWbJCCKg+c6QRpNRFWmRiwpjh0hIN+GeyZLw6GR3vcRl3b6vPZEBrwK018Tq98jRY/le3z5egiVmP6+VE/Vuw6LN7GekcATsB9n6hM2ukKhWswp6ZbzTVwSW5+0PJrr78t6OCdA4r0JMVyi9OUlbz4SC+LR+4b23BQzz9";
@@ -111,8 +112,11 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         rightDownMotor.setDirection(DcMotor.Direction.REVERSE);
         dumpBucket.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dumpBucket.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pickArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pickArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if(resetArm)
+        {
+            pickArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            pickArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
         pickArm.setDirection(DcMotor.Direction.FORWARD);
         color.enableLed(true);
         calibrateAccel();
@@ -553,51 +557,71 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
     }
     //moves forward then to the side
 
-    protected void stopAtGlyph(int nubmer, boolean useLeft) throws InterruptedException
+    protected void stopAtGlyphRight(int number) throws InterruptedException
     {
         int numberAt = 0;
         double startRange;
         boolean seen = false;
         int stopDistance = 30;
         int differenceDetection = 3;
-        ModernRoboticsI2cRangeSensor tempRange = null;
-        if(useLeft)
+        while(opModeIsActive() && rangeRight.getDistance(DistanceUnit.CM) > stopDistance)
+
         {
-           tempRange= rangeLeft;
-        }
-        else
-        {
-            tempRange = rangeRight;
-        }
-        //undo if need just get rid of temp and write twice
-        while(tempRange.getDistance(DistanceUnit.CM) > stopDistance)
-        {
-            moveStraight(.2,270);
+            moveStraight(.175,270);
         }
         align();
         sleep(500);
-        startRange = tempRange.getDistance(DistanceUnit.CM);
-        while (opModeIsActive() && numberAt < nubmer)
+        startRange = rangeRight.getDistance(DistanceUnit.CM);
+        while (opModeIsActive() && numberAt < number)
         {
-            if(useLeft)
-            {
-                moveStraight(.4,-1);
-            }
-            else
-            {
-                moveStraight(.4,179);
-            }
+            moveStraight(.4,179);
             showRange();
             telemetry.addData("seen: ", numberAt);
             telemetry.update();
-            if(tempRange.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
+            if(rangeRight.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
             {
                 seen = true;
                 numberAt++;
             }
             else
             {
-                if(tempRange.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
+                if(rangeRight.getDistance(DistanceUnit.CM) > startRange-differenceDetection)
+                {
+                    seen = false;
+                }
+            }
+        }
+        align();
+        moveStraight(0,0,0);
+    }
+    protected void stopAtGlyphLeft(int number) throws InterruptedException
+    {
+        int numberAt = 0;
+        double startRange;
+        boolean seen = false;
+        int stopDistance = 30;
+        int differenceDetection = 3;
+        while(opModeIsActive() && rangeLeft.getDistance(DistanceUnit.CM) > stopDistance)
+        {
+            moveStraight(.175,270);
+        }
+        align();
+        sleep(500);
+        startRange = rangeLeft.getDistance(DistanceUnit.CM);
+        while (opModeIsActive() && numberAt < number)
+        {
+            moveStraight(.4,-1);
+            showRange();
+            telemetry.addData("seen: ", numberAt);
+            telemetry.update();
+            if(rangeLeft.getDistance(DistanceUnit.CM) < startRange-differenceDetection && !seen)
+            {
+                seen = true;
+                numberAt++;
+            }
+            else
+            {
+                if(rangeLeft.getDistance(DistanceUnit.CM) > startRange-differenceDetection+2)
                 {
                     seen = false;
                 }
@@ -688,7 +712,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         double time = runtime.milliseconds();
         gyro.calibrate();
         gyroposition = 0;
-        while(runtime.milliseconds()-time < 3000)
+        while(opModeIsActive() && runtime.milliseconds()-time < 3000)
         {
             idle();
         }
@@ -740,7 +764,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
             pickArm.setPower(-armSpeed);
         }
         pickArm.setPower(0);
-        while(opModeIsActive() && (gamepad1.left_bumper || !check_right_bumper)  && dumpBucket.getCurrentPosition() < 100)
+        while(opModeIsActive() && (gamepad1.right_bumper || !check_right_bumper)  && dumpBucket.getCurrentPosition() < 100)
         {
                 dumpBucket.setPower(.2);
         }

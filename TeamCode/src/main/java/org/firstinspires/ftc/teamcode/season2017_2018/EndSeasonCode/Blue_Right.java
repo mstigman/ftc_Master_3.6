@@ -121,7 +121,7 @@ public class Blue_Right extends MechanumTestBotEnd{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        initializeRobot();
+        initializeRobot(true);
         telemetry.addData("robot init","");
         telemetry.update();
         waitForStart();
@@ -129,7 +129,7 @@ public class Blue_Right extends MechanumTestBotEnd{
         setArmUp();
         ballKnocker.setPosition(ballKnockerMid);
         ballArm.setPosition(ballArmDown);
-        sleep(500);
+        sleep(2000);
         if(isBlue())
         {
             ballKnocker.setPosition(ballKnockerRight);
@@ -142,7 +142,8 @@ public class Blue_Right extends MechanumTestBotEnd{
         int vuf = vuforiaInt();
         moveStraight(.5,2000,270);
         moveStraight(.3,100,90);
-        stopAtGlyph(vuf,false);
+        stopAtGlyphRight(vuf);
+        moveStraight(.4,75,0);
         dumpBlocks(false);
         moveStraight(.25,100,90);
 

@@ -64,7 +64,7 @@ public class TestOpMode extends MechanumTestBotEnd
     @Override
     public void runOpMode() throws InterruptedException
     {
-        initializeRobot();
+        initializeRobot(true);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

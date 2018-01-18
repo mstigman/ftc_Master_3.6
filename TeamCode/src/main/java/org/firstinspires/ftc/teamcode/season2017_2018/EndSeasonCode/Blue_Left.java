@@ -99,8 +99,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.season2017_2018.FirstCompCode.MechanumTestBot;
-
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -123,7 +121,7 @@ public class Blue_Left extends MechanumTestBotEnd{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        initializeRobot();
+        initializeRobot(true);
         telemetry.addData("robot init","");
         telemetry.update();
         waitForStart();
@@ -131,7 +129,7 @@ public class Blue_Left extends MechanumTestBotEnd{
         runtime.reset();
         ballKnocker.setPosition(ballKnockerMid);
         ballArm.setPosition(ballArmDown);
-        sleep(500);
+        sleep(2000);
         if(isBlue())
         {
             ballKnocker.setPosition(ballKnockerRight);
@@ -144,9 +142,10 @@ public class Blue_Left extends MechanumTestBotEnd{
         int vuf = vuforiaInt();
         moveStraight(.4,475,270);
         turnDegrees(.3,90);
-        moveStraight(.4,100,0);
+        moveStraight(.4,200,0);
         moveStraight(.3,100,90);
-        stopAtGlyph(vuf,false);
+        stopAtGlyphRight(vuf);
+        moveStraight(.5,75,0);
         dumpBlocks(false);
         moveStraight(.25,100,90);
 

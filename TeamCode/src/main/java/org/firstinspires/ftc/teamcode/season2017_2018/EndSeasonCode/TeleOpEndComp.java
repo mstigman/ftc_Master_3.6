@@ -44,7 +44,7 @@ public class TeleOpEndComp extends MechanumTestBotEnd{
     @Override
     public void runOpMode() throws InterruptedException {
 
-        initializeRobot();
+        initializeRobot(false);
         telemetry.addData("robot init","");
         telemetry.update();
         waitForStart();
@@ -71,7 +71,7 @@ public class TeleOpEndComp extends MechanumTestBotEnd{
             }
             else if (gamepad1.right_bumper)
             {
-                pickUpBlock(true);
+                pickUpBlockWithBucket(true);
             }
             else if (gamepad1.right_trigger > .5)
             {
