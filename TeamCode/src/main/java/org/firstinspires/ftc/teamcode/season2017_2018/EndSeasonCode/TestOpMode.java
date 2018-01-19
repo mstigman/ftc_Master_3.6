@@ -89,22 +89,17 @@ public class TestOpMode extends MechanumTestBotEnd
             telemetry.update();
             //red1
             if (gamepad1.a) {
-                moveStraight(.5,1000,90);
+                stopAtGlyphRight(3);
             }
             //red 2
             else if (gamepad1.b) {
-                moveStraight(.5,1000,0);
             }
             //blue 1
             else if (gamepad1.x) {
-                moveStraight(.5,1000,180);
             }
             else if (gamepad1.y) {
-                moveStraight(.5,1000,270);
             } else if (gamepad1.right_bumper) {
-                turnDegrees(.4,-90);
             } else if (gamepad1.left_bumper) {
-                turnDegrees(.4,180);
             }
             else
             {

@@ -562,19 +562,34 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         int numberAt = 0;
         double startRange;
         boolean seen = false;
-        int stopDistance = 30;
+        int stopDistance = 25;
         int differenceDetection = 3;
-        while(opModeIsActive() && rangeRight.getDistance(DistanceUnit.CM) > stopDistance)
+        while(opModeIsActive() && rangeRight.getDistance(DistanceUnit.CM) > stopDistance+15)
 
         {
-            moveStraight(.175,270);
+            moveStraight(.2,270);
+        }
+        double startTime = runtime.milliseconds();
+        double offset = 0;
+        while(runtime.milliseconds() < startTime + 3000)
+        {
+            offset = (rangeLeft.getDistance(DistanceUnit.CM) - stopDistance)*.01;
+            if(offset < 0)
+            {
+                offset = Math.max(-.1,offset);
+            }
+            else
+            {
+                offset = Math.min(.1,offset);
+            }
+            moveStraight(offset,270);
         }
         align();
         sleep(500);
         startRange = rangeRight.getDistance(DistanceUnit.CM);
         while (opModeIsActive() && numberAt < number)
         {
-            moveStraight(.4,179);
+            moveStraight(.4,-1);
             showRange();
             telemetry.addData("seen: ", numberAt);
             telemetry.update();
@@ -599,18 +614,33 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         int numberAt = 0;
         double startRange;
         boolean seen = false;
-        int stopDistance = 30;
-        int differenceDetection = 3;
-        while(opModeIsActive() && rangeLeft.getDistance(DistanceUnit.CM) > stopDistance)
+        int stopDistance = 25;
+        double differenceDetection = 3;
+        while(opModeIsActive() && rangeLeft.getDistance(DistanceUnit.CM) > stopDistance+15)
         {
-            moveStraight(.175,270);
+            moveStraight(.2,270);
+        }
+        double startTime = runtime.milliseconds();
+        double offset = 0;
+        while(runtime.milliseconds() < startTime + 3000)
+        {
+            offset = (rangeLeft.getDistance(DistanceUnit.CM) - stopDistance)*.01;
+            if(offset < 0)
+            {
+                offset = Math.max(-.1,offset);
+            }
+            else
+            {
+                offset = Math.min(.1,offset);
+            }
+            moveStraight(offset,270);
         }
         align();
         sleep(500);
         startRange = rangeLeft.getDistance(DistanceUnit.CM);
         while (opModeIsActive() && numberAt < number)
         {
-            moveStraight(.4,-1);
+            moveStraight(.4,179);
             showRange();
             telemetry.addData("seen: ", numberAt);
             telemetry.update();
@@ -792,7 +822,7 @@ public abstract class MechanumTestBotEnd extends LinearOpMode{
         {
             if(check_left_bumper)
             {
-                dumpBucket.setPower(.3);
+                dumpBucket.setPower(.25);
             }
             else {
                 dumpBucket.setPower(bucketSpeed);
